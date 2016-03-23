@@ -31,4 +31,4 @@ MIT License
 
 ## Authors
 
-Johannes Hund (@horus), Daniel Peintner (@danielpeintner)
+Johannes Hund (@h0ru5), Daniel Peintner (@danielpeintner)
