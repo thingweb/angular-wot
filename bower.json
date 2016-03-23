@@ -1,0 +1,26 @@
+{
+  "name": "angular-wot",
+  "version": "0.0.1",
+  "homepage": "https://github.com/thingweb/angular-wot",
+  "authors": [
+    "Johannes Hund (h0ru5) <johannes.hund@gmail.com>"
+  ],
+  "description": "Web of Things module for Angular.js",
+  "main": "angular-wot.js",
+  "keywords": [
+    "angular",
+    "wot",
+    "w3c",
+    "web",
+    "things",
+    "iot"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
