@@ -12,7 +12,7 @@ var del = require("del");
 var bower = require("gulp-bower");
 
 gulp.task('default', function () {
-	return gulp.src('src/**/*.js')
+	return gulp.src(['src/wot.module.js','src/**/*.js'])
         .pipe(sourcemaps.init())
 		.pipe(concat('angular-wot.js'))
         .pipe(ngAnnotate())

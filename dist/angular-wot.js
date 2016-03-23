@@ -1,3 +1,5 @@
+var wot = angular.module("wot",['coap']);
+
 angular.module("wot").factory('TdParser',['$http','CoAP',
   function TdParserFactory($http,CoAP) {
     var TdParser = {};
@@ -136,5 +138,3 @@ angular.module("wot").factory('ThingClient',['$http','CoAP',
     return ThingClient;
   }
 ]);
-
-var wot = angular.module("wot",['coap']);
