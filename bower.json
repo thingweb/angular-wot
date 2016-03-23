@@ -6,7 +6,7 @@
     "Johannes Hund (h0ru5) <johannes.hund@gmail.com>"
   ],
   "description": "Web of Things module for Angular.js",
-  "main": "angular-wot.js",
+  "main": "dist/angular-wot.js",
   "keywords": [
     "angular",
     "wot",
@@ -21,6 +21,8 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "package.json",
+    "src"
   ]
 }
