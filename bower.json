@@ -1,6 +1,6 @@
 {
   "name": "angular-wot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/thingweb/angular-wot",
   "authors": [
     "Johannes Hund (h0ru5) <johannes.hund@gmail.com>"
@@ -24,5 +24,8 @@
     "tests",
     "package.json",
     "src"
-  ]
+  ],
+  "dependencies": {
+    "angular-coap": "^0.0.2"
+  }
 }
