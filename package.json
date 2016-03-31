@@ -4,7 +4,8 @@
   "description": "Web of Things module for Angular.js",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/gulp test",
+    "build": "node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",
@@ -25,13 +26,25 @@
   },
   "homepage": "https://github.com/thingweb/angular-wot#readme",
   "devDependencies": {
+    "angular": "^1.5.3",
+    "angular-mocks": "^1.5.3",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-bower": "0.0.13",
     "gulp-concat": "^2.6.0",
+    "gulp-jasmine": "^2.3.0",
+    "gulp-karma": "0.0.5",
     "gulp-ng-annotate": "^2.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.3"
+    "gulp-uglify": "^1.5.3",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-angular": "0.0.6",
+    "karma-jasmine": "^0.3.8",
+    "karma-jasmine-jquery": "^0.1.1",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-spec-reporter": "0.0.25",
+    "phantomjs-prebuilt": "^2.1.7"
   }
 }

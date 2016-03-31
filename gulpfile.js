@@ -11,6 +11,9 @@ var ngAnnotate = require('gulp-ng-annotate');
 var del = require("del");
 var bower = require("gulp-bower");
 
+var jasmine = require('gulp-jasmine');
+var karma = require('karma').server;
+
 gulp.task('default', function () {
 	return gulp.src(['src/wot.module.js','src/**/*.js'])
         .pipe(sourcemaps.init())
@@ -27,4 +30,13 @@ gulp.task('default', function () {
 
 gulp.task('clean', function(cb) {
   del("dist/**/*",cb);  
+});
+
+gulp.task('test', function(done) {
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, function() {
+        done();
+    });
 });

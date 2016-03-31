@@ -1,0 +1,52 @@
+{
+  "@context": ["http://w3c.github.io/wot/w3c-wot-td-context.jsonld",
+               {"actuator": "http://example.org/actuator#"}],
+  "@type": "Thing",
+  "name": "MyLEDThing",
+  "uris": [
+    "coap://www.myled.com:5683/",
+    "http://www.myled.com:8080/myled/"
+  ],
+  "encodings": [ "JSON","EXI4JSON"],
+  "security": {
+    "cat": "token:jwt",
+    "alg": "HS256",
+    "as": "https://authority-issuing.org"
+  },
+  "properties": [
+    {
+      "@type": "actuator:onOffStatus",
+      "name": "status",
+      "valueType": "xsd:string",
+      "writable": true,
+      "hrefs": [ "status", "myled/status" ]
+    }
+  ],
+  "actions": [
+    {
+      "@type": "actuator:fadeIn",
+      "name": "fadeIn",
+      "inputData": {
+        "valueType": "xsd:short",
+        "actuator:unit": "actuator:ms"
+      },
+      "hrefs": ["in", "myled/in"  ]
+    },
+    {
+      "@type": "actuator:fadeOut",
+      "name": "fadeOut",
+      "inputData": {
+        "valueType": "xsd:short",
+        "actuator:unit": "actuator:ms"
+      },
+      "hrefs": ["out", "myled/out" ]
+    }
+  ],
+  "events": [
+    {
+      "name": "criticalCondition",
+      "valueType": "xsd:string",
+      "hrefs": [ "ev", "myled/event" ]
+    }
+  ]
+}

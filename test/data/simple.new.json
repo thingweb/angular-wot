@@ -1,0 +1,15 @@
+{
+  "@context": ["http://w3c.github.io/wot/w3c-wot-td-context.jsonld"],
+  "@type": "Thing",
+  "name": "MyTemperatureThing",
+  "uris": "coap://www.mytemp.com:5683/",
+  "encodings": ["JSON"],
+  "properties": [
+    {
+      "name": "temperature",
+      "valueType": "xsd:float",
+      "writable": false,
+      "hrefs": ["temp"]
+    }
+  ]
+}

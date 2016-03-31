@@ -13,12 +13,15 @@ Recommended to use [Bower](http://bower.io/):
 bower install angular-wot
 ```
 
-Otherwise, clone the repo and build with [Gulp](http://gulpjs.com/):
+Otherwise, clone the repo and build
 
 ```bash
 npm install
-gulp
+npm test
+npm run build
 ```
+
+build result is under ``dist``
 
 ## Known issues
 
