@@ -75,6 +75,14 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
             
         }
 
+        var pathConcat = function pathConcat(left, right) {
+            if(left.slice[-1] === '/') {
+               return left + right; 
+            } else {
+                return left + '/' + right;
+            }
+        }
+
         var createThingfromNewTd =  function createThingfromNewTd(parsedTd) {
             var uriArray = ( parsedTd.uris instanceof Array ) ? parsedTd.uris : [parsedTd.uris];
             var uriIndex = chooseUriIndex(uriArray);
@@ -93,12 +101,12 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'name': property.name,
                         'writable': property.writable,
                         'xsdType': property.valueType,
-                        'uri': newThing.uri + property.hrefs[uriIndex],
+                        'uri': pathConcat(newThing.uri,property.hrefs[uriIndex]),
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
                         'isNumeric': function isNumeric() {
-                            return isNumericType(this.xsdType);
+                            return TdParser.isNumericType(this.xsdType);
                         }
                     });
                 });
@@ -111,7 +119,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'xsdParamType': (action.inputData) ? action.inputData.valueType : "",
                         'xsdReturnType': (action.outputData)? action.outputData.valueType : "",
                         'parent': newThing,
-                        'uri' : newThing.uri + action.hrefs[uriIndex]
+                        'uri' : pathConcat(newThing.uri,action.hrefs[uriIndex])
                     });
                 });
 

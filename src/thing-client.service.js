@@ -64,8 +64,8 @@ angular.module("wot").factory('ThingClient', ['$http', 'CoAP',
                 payload = param;
             };
 
-            if (property.uri) {
-                return restcall('POST', property.uri, payload)
+            if (action.uri) {
+                return restcall('POST', action.uri, payload)
             }
 
             if (thing.protocols['HTTP']) {
