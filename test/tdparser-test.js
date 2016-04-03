@@ -39,4 +39,25 @@ describe("thing description parser service", function() {
         expect(thing.properties.length).toBe(5);
     })
     
+    it("should parse the example new TD", function () {
+        var json = getJSONFixture('simple.new.json')
+        var thing = TdParser.createThing(json);
+        expect(thing).toBeDefined();
+        expect(thing.properties.length).toBe(1);
+        expect(thing.name).toBe("MyTemperatureThing")
+        var prop = thing.properties[0];
+        expect(prop.name).toBe("temperature")
+        expect(prop.uri).toBe("coap://www.mytemp.com:5683/temp")
+    })
+    
+    it("should not choke on unknown fields", function () {
+        var json = getJSONFixture('example3.new.json')
+        var thing = TdParser.createThing(json);
+        expect(thing).toBeDefined();
+        expect(thing.properties.length).toBe(1);
+        expect(thing.name).toBe("MyLEDThing")
+        var prop = thing.properties[0];
+        expect(prop.name).toBe("status")
+        expect(prop.uri).toBe("http://www.myled.com:8080/myled/status")
+    })
 });

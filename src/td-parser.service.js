@@ -15,8 +15,8 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
         TdParser.isNumericType = function isNumericType(xsdType) {
             return numericTypes.indexOf(xsdType) != -1;
         }
-
-        TdParser.createThing = function createThing(parsedTd) {
+        
+        var createThingfromOldTd =  function createThingfromOldTd(parsedTd) {
             var newThing = {
                 'name': parsedTd.metadata.name,
                 'properties': [],
@@ -59,6 +59,70 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                 });
 
             return newThing;
+        }
+
+        var chooseUriIndex = function chooseUriIndex(uriArray) {
+            prefIdx = -1;
+            for(i=0;i<uriArray.length;i++) {
+                var uri = uriArray[i];
+                var scheme = uri.substring(0,uri.indexOf(':'));
+                if(scheme === 'http')
+                    return i;
+                else if (scheme === 'coap')
+                    prefIdx = i;
+            };
+            return prefIdx;
+            
+        }
+
+        var createThingfromNewTd =  function createThingfromNewTd(parsedTd) {
+            var uriArray = ( parsedTd.uris instanceof Array ) ? parsedTd.uris : [parsedTd.uris];
+            var uriIndex = chooseUriIndex(uriArray);
+            if(uriIndex === -1) throw Error("no suitable Protocols found")
+            var newThing = {
+                'name': parsedTd.name,
+                'properties': [],
+                'actions': [],
+                'uri': uriArray[uriIndex]
+            };
+
+            //add all properties
+            if(parsedTd.properties) parsedTd.properties
+                .forEach(function addProperty(property) {
+                    newThing.properties.push({
+                        'name': property.name,
+                        'writable': property.writable,
+                        'xsdType': property.valueType,
+                        'uri': newThing.uri + property.hrefs[uriIndex],
+                        'autoUpdate': false,
+                        'history': [],
+                        'parent': newThing,
+                        'isNumeric': function isNumeric() {
+                            return isNumericType(this.xsdType);
+                        }
+                    });
+                });
+
+            //add actions
+            if(parsedTd.actions) parsedTd.actions
+                .forEach(function addAction(action) {
+                    newThing.actions.push({
+                        'name': action.name,
+                        'xsdParamType': (action.inputData) ? action.inputData.valueType : "",
+                        'xsdReturnType': (action.outputData)? action.outputData.valueType : "",
+                        'parent': newThing,
+                        'uri' : newThing.uri + action.hrefs[uriIndex]
+                    });
+                });
+
+            return newThing;
+        }
+
+       TdParser.createThing = function dualParseTD(tdObj){
+            if(tdObj.metadata)
+                return createThingfromOldTd(tdObj);
+               else
+               return createThingfromNewTd(tdObj);
         }
 
         TdParser.fromUrl = function fromUrl(url) {

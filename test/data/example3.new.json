@@ -19,7 +19,7 @@
       "name": "status",
       "valueType": "xsd:string",
       "writable": true,
-      "hrefs": [ "status", "myled/status" ]
+      "hrefs": [ "status", "status" ]
     }
   ],
   "actions": [
@@ -30,7 +30,7 @@
         "valueType": "xsd:short",
         "actuator:unit": "actuator:ms"
       },
-      "hrefs": ["in", "myled/in"  ]
+      "hrefs": ["in", "in"  ]
     },
     {
       "@type": "actuator:fadeOut",
@@ -39,14 +39,14 @@
         "valueType": "xsd:short",
         "actuator:unit": "actuator:ms"
       },
-      "hrefs": ["out", "myled/out" ]
+      "hrefs": ["out", "out" ]
     }
   ],
   "events": [
     {
       "name": "criticalCondition",
       "valueType": "xsd:string",
-      "hrefs": [ "ev", "myled/event" ]
+      "hrefs": [ "ev", "event" ]
     }
   ]
 }
