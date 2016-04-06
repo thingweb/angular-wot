@@ -76,7 +76,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
         }
 
         var pathConcat = function pathConcat(left, right) {
-            if(left.slice[-1] === '/') {
+            if(left.slice(-1) === '/') {
                return left + right; 
             } else {
                 return left + '/' + right;
@@ -130,7 +130,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
             if(tdObj.metadata)
                 return createThingfromOldTd(tdObj);
                else
-               return createThingfromNewTd(tdObj);
+                return createThingfromNewTd(tdObj);
         }
 
         TdParser.fromUrl = function fromUrl(url) {
