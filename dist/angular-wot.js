@@ -40,7 +40,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': isNumericType(this.xsdType)
+                        'isNumeric': TdParser.isNumericType(property.outputData)
                     });
                 });
 
@@ -105,7 +105,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': TdParser.isNumericType(this.xsdType)
+                        'isNumeric': TdParser.isNumericType(property.valueType)
                     });
                 });
 
