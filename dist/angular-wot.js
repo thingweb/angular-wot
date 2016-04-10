@@ -40,9 +40,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': function isNumeric() {
-                            return isNumericType(this.xsdType);
-                        }
+                        'isNumeric': TdParser.isNumericType(property.outputData)
                     });
                 });
 
@@ -107,18 +105,19 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': function isNumeric() {
-                            return TdParser.isNumericType(this.xsdType);
-                        }
+                        'isNumeric': TdParser.isNumericType(property.valueType)
                     });
                 });
 
             //add actions
             if(parsedTd.actions) parsedTd.actions
                 .forEach(function addAction(action) {
+                     var paramType = (action.inputData) ? action.inputData.valueType :"";
+                    
                     newThing.actions.push({
                         'name': action.name,
-                        'xsdParamType': (action.inputData) ? action.inputData.valueType : "",
+                        'xsdParamType': paramType,
+                        'numericParamType': TdParser.isNumericType(paramType), //TODO objects for types
                         'xsdReturnType': (action.outputData)? action.outputData.valueType : "",
                         'parent': newThing,
                         'uri' : pathConcat(newThing.uri,action.hrefs[uriIndex])
