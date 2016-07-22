@@ -112,7 +112,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
             //add actions
             if(parsedTd.actions) parsedTd.actions
                 .forEach(function addAction(action) {
-                    var paramType = (action.inputData) ? action.inputData.valueType :"";
+                     var paramType = (action.inputData) ? action.inputData.valueType :"";
                     
                     newThing.actions.push({
                         'name': action.name,
