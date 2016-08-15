@@ -35,10 +35,12 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'name': property.name,
                         'writable': property.writable,
                         'xsdType': property.outputData,
+                        'type': property.valueType['type'],
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': TdParser.isNumericType(property.outputData)
+                        'isNumeric': TdParser.isNumericType(property.outputData),
+                        'properties': property.valueType['properties']
                     });
                 });
 
@@ -110,13 +112,14 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
             //add actions
             if(parsedTd.actions) parsedTd.actions
                 .forEach(function addAction(action) {
-                     var paramType = (action.inputData) ? action.inputData.valueType :"";
+                    var paramType = (action.inputData) ? action.inputData.valueType['type'] :"";
                     
                     newThing.actions.push({
                         'name': action.name,
-                        'xsdParamType': paramType,
-                        'numericParamType': TdParser.isNumericType(paramType), //TODO objects for types
-                        'xsdReturnType': (action.outputData)? action.outputData.valueType : "",
+                        'xsdParamType': paramType, //misleading name: xsd
+                        'numericParamType': TdParser.isNumericType(paramType), //Unused in UI
+                        'inputProperties': (action.inputData) ? action.inputData.valueType['properties'] :"",
+                        'xsdReturnType': (action.outputData) ? action.outputData.valueType['type'] : "", //should not be xsd
                         'parent': newThing,
                         'uri' : pathConcat(newThing.uri,action.hrefs[uriIndex])
                     });
