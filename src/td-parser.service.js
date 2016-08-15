@@ -35,12 +35,10 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'name': property.name,
                         'writable': property.writable,
                         'xsdType': property.outputData,
-                        'type': property.valueType['type'],
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': TdParser.isNumericType(property.outputData),
-                        'properties': property.valueType['properties']
+                        'isNumeric': TdParser.isNumericType(property.outputData)
                     });
                 });
 
@@ -101,11 +99,13 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
                         'name': property.name,
                         'writable': property.writable,
                         'xsdType': property.valueType,
+                        'type': property.valueType['type'],
                         'uri': pathConcat(newThing.uri,property.hrefs[uriIndex]),
                         'autoUpdate': false,
                         'history': [],
                         'parent': newThing,
-                        'isNumeric': TdParser.isNumericType(property.valueType)
+                        'isNumeric': TdParser.isNumericType(property.valueType),
+                        'properties': property.valueType['properties']
                     });
                 });
 
