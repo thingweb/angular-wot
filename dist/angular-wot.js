@@ -174,7 +174,7 @@ angular.module("wot").factory('ThingClient', ['$http', 'CoAP',
                 };
                 return $http(req);
             } else if (scheme === 'coap') {
-                return CoAP.doCoapReq(method, uri, payload)
+                return CoAP.doCoapReq(method, uri, JSON.stringify(payload))
                     .then($http.defaults.transformResponse);
             } else
                 throw Error('unknown uri scheme')
@@ -191,18 +191,24 @@ angular.module("wot").factory('ThingClient', ['$http', 'CoAP',
 
             if (property.uri) {
                 return restcall('GET', property.uri)
-                    .then(function(res) { return res.data.value })
+                    .then(function (res) {
+                        if (res.data)
+                            return res.data.value;
+                        else
+                            return JSON.parse(res).value;
+
+                    })
                     .then(applyNewValue);
             }
 
             if (thing.protocols['HTTP']) {
                 return $http.get(thing.protocols['HTTP'].uri + "/" + property.name)
-                    .then(function(res) { return res.data.value })
+                    .then(function (res) { return res.data.value })
                     .then(applyNewValue);
             } else if (thing.protocols['CoAP']) {
                 return CoAP.get(thing.protocols['CoAP'].uri + "/" + property.name)
-                    .then(function(res) {
-                        return JSON.parse(res).value
+                    .then(function (res) {
+                        return JSON.parse(res.payload).value
                     })
                     .then(applyNewValue);
             }
