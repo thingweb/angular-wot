@@ -74,6 +74,9 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
         }
 
         var pathConcat = function pathConcat(left, right) {
+			if(left.length == 0) {
+				return right;
+			}
             if(left.slice(-1) === '/') {
                return left + right; 
             } else {
@@ -82,8 +85,18 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
         }
 
         var createThingfromNewTd =  function createThingfromNewTd(parsedTd) {
-            var uriArray = ( parsedTd.uris instanceof Array ) ? parsedTd.uris : [parsedTd.uris];
-            var uriIndex = chooseUriIndex(uriArray);
+			var uriIndex;
+			var uriArray;
+			if(parsedTd.uris) {
+				// there is a base uri
+				uriArray = ( parsedTd.uris instanceof Array ) ? parsedTd.uris : [parsedTd.uris];
+				uriIndex = chooseUriIndex(uriArray);
+			} else {
+				// no base URI
+				uriArray = [""];
+				uriIndex = 0;
+			}
+
             if(uriIndex === -1) throw Error("no suitable Protocols found")
             var newThing = {
                 'name': parsedTd.name,
@@ -136,7 +149,7 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
 					// TD http://w3c.github.io/wot/current-practices/wot-practices-santa-clara-2017.html
 					// --> use transformer
 					var tdObj_V1 = transformTDV2ObjToV1Obj(tdObj);
-					console.log(tdObj_V1);
+					// console.log(tdObj_V1);
 					return createThingfromNewTd(tdObj_V1);
 					// throw "TODO Santa Clara TD version";
 				} else {

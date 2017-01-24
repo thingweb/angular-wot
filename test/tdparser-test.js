@@ -51,7 +51,18 @@ describe("thing description parser service", function() {
     })
 	
     it("should parse the example TD for SantaClara", function () {
-        var json = getJSONFixture('td_v2.json')
+        var json = getJSONFixture('td1_v2.json')
+        var thing = TdParser.createThing(json);
+        expect(thing).toBeDefined();
+        expect(thing.properties.length).toBe(1);
+        expect(thing.name).toBe("MyTemperatureThing")
+        var prop = thing.properties[0];
+        expect(prop.name).toBe("temperature")
+        expect(prop.uri).toBe("coap://mytemp.example.com:5683/temp")
+    })
+	
+    it("should parse the example TD for SantaClara without base uri", function () {
+        var json = getJSONFixture('td2_v2.json')
         var thing = TdParser.createThing(json);
         expect(thing).toBeDefined();
         expect(thing.properties.length).toBe(1);
