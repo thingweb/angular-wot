@@ -131,10 +131,21 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
         }
 
        TdParser.createThing = function dualParseTD(tdObj){
-            if(tdObj.metadata)
+            if(tdObj.metadata) {
                 return createThingfromOldTd(tdObj);
-               else
-                return createThingfromNewTd(tdObj);
+			} else {
+				if(tdObj.interactions) {
+					// TD http://w3c.github.io/wot/current-practices/wot-practices-santa-clara-2017.html
+					// --> use transformer
+					var tdObj_V1 = transformTDV2ObjToV1Obj(tdObj);
+					console.log(tdObj_V1);
+					return createThingfromNewTd(tdObj_V1);
+					// throw "TODO Santa Clara TD version";
+				} else {
+					// TD https://w3c.github.io/wot/current-practices/wot-practices-beijing-2016.html
+					return createThingfromNewTd(tdObj);
+				}
+			}
         }
 
         TdParser.fromUrl = function fromUrl(url) {
@@ -155,6 +166,90 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
             var td = JSON.parse(json);
             return TdParser.createThing(td);
         }
+		
+		
+		// ==========================================================
+		// START COPY
+		// JUST A COPY OF https://github.com/thingweb/node-wot/blob/master/src/td/tdtransformer.ts
+		// ==========================================================
+		
+		var transformTDV2StringToV1String = function transformTDV2StringToV1String(td2) {
+			var td1 = JSON.parse(td2);
+			if (td1["base"] != null) {
+				td1["uris"] = [];
+				td1["uris"].push(td1["base"]);
+				delete td1["base"];
+			}
+			if (td1["interactions"] != null && Array.isArray(td1["interactions"])) {
+				for (var _i = 0, _a = td1["interactions"]; _i < _a.length; _i++) {
+					var inter = _a[_i];
+					if (inter["@type"] != null && Array.isArray(inter["@type"])) {
+						if (inter["@type"].indexOf("Property") >= 0) {
+							if (td1["properties"] == null) {
+								td1["properties"] = [];
+							}
+							td1["properties"].push(inter);
+							if (inter["outputData"] != null && inter["outputData"]["valueType"] != null) {
+								inter["valueType"] = inter["outputData"]["valueType"];
+								delete inter["outputData"];
+							}
+							fixLinksV2toHrefsEncodingsV1(td1, inter);
+						}
+						if (inter["@type"].indexOf("Action") >= 0) {
+							if (td1["actions"] == null) {
+								td1["actions"] = [];
+							}
+							td1["actions"].push(inter);
+							fixLinksV2toHrefsEncodingsV1(td1, inter);
+						}
+						if (inter["@type"].indexOf("Event") >= 0) {
+							if (td1["events"] == null) {
+								td1["events"] = [];
+							}
+							td1["events"].push(inter);
+							if (inter["outputData"] != null && inter["outputData"]["valueType"] != null) {
+								inter["valueType"] = inter["outputData"]["valueType"];
+								delete inter["outputData"];
+							}
+							fixLinksV2toHrefsEncodingsV1(td1, inter);
+						}
+					}
+				}
+				delete td1["interactions"];
+			}
+			return td1;
+		}
+		
+		var fixLinksV2toHrefsEncodingsV1 = function fixLinksV2toHrefsEncodingsV1(td1, inter) {
+			if (inter["links"] != null && Array.isArray(inter["links"])) {
+				for (var _i = 0, _a = inter["links"]; _i < _a.length; _i++) {
+					var link = _a[_i];
+					if (inter["hrefs"] == null) {
+						inter["hrefs"] = [];
+					}
+					inter["hrefs"].push(link["href"]);
+					if (td1["encodings"] == null) {
+						td1["encodings"] = [];
+					}
+					if (td1["encodings"].indexOf(link["mediaType"]) < 0) {
+						td1["encodings"].push(link["mediaType"]);
+					}
+				}
+				delete inter["links"];
+			}
+		}
+		
+		var transformTDV2ObjToV1Obj = function transformTDV2ObjToV1Obj(td2) {
+			return transformTDV2StringToV1String(JSON.stringify(td2));
+		}
+		
+		// ==========================================================
+		// END COPY
+		// ==========================================================
+		 
+		
+		
+		
 
         return TdParser;
     }
