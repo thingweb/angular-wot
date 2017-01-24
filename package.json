@@ -1,6 +1,6 @@
 {
   "name": "angular-wot",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Web of Things module for Angular.js",
   "main": "gulpfile.js",
   "scripts": {
