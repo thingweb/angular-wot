@@ -72,6 +72,27 @@ describe("thing description parser service", function() {
         expect(prop.uri).toBe("coap://mytemp.example.com:5683/temp")
     })
 	
+    it("should parse the example TD for Duesseldorf", function () {
+        var json = getJSONFixture('td1_v3.json')
+        var thing = TdParser.createThing(json);
+        expect(thing).toBeDefined();
+        expect(thing.properties.length).toBe(1);
+        expect(thing.name).toBe("MyTemperatureThing")
+        var prop = thing.properties[0];
+        expect(prop.name).toBe("temperature")
+        expect(prop.uri).toBe("coap://mytemp.example.com:5683/temp")
+    })
+	
+	it("should parse the more complex example TD for Duesseldorf", function () {
+        var json = getJSONFixture('td2_v3.json')
+        var thing = TdParser.createThing(json);
+        expect(thing).toBeDefined();
+        expect(thing.properties.length).toBe(1);
+        expect(thing.name).toBe("MyLEDThing")
+        var prop = thing.properties[0];
+        expect(prop.name).toBe("status")
+        // expect(prop.uri).toBe("http://mytemp.example.com:8080/status")
+    })
     
     it("should not choke on unknown fields", function () {
         var json = getJSONFixture('example3.new.json')

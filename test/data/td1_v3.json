@@ -1,0 +1,17 @@
+{
+  "@context": ["http://w3c.github.io/wot/w3c-wot-td-context.jsonld"],
+  "@type": ["Thing"],
+  "name": "MyTemperatureThing",
+  "interaction": [
+    {
+      "@type": ["Property"],
+      "name": "temperature",
+      "outputData": { "type": "number" },
+      "writable": false,
+      "link": [{
+        "href" : "coap://mytemp.example.com:5683/temp",
+        "mediaType": "application/json"
+        }]
+    }
+  ]
+}
