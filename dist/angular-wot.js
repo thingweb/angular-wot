@@ -154,6 +154,13 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
 					// console.log(tdObj_V1);
 					return createThingfromNewTd(tdObj_V1);
 					// throw "TODO Santa Clara TD version";
+				} else if(tdObj.interaction) {
+					// TD http://w3c.github.io/wot/current-practices/wot-practices-duesseldorf-2017.html
+					// --> use transformer
+					var tdObj_V1 = transformTDV3ObjToV1Obj(tdObj);
+					// console.log(tdObj_V1);
+					return createThingfromNewTd(tdObj_V1);
+					// throw "TODO Santa Clara TD version";
 				} else {
 					// TD https://w3c.github.io/wot/current-practices/wot-practices-beijing-2016.html
 					return createThingfromNewTd(tdObj);
@@ -184,6 +191,11 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
 		// ==========================================================
 		// START COPY
 		// JUST A COPY OF https://github.com/thingweb/node-wot/blob/master/src/td/tdtransformer.ts
+		// ==========================================================
+		
+				
+		// ==========================================================
+		// Santa Clara
 		// ==========================================================
 		
 		var transformTDV2StringToV1String = function transformTDV2StringToV1String(td2) {
@@ -254,6 +266,91 @@ angular.module("wot").factory('TdParser', ['$http', 'CoAP',
 		
 		var transformTDV2ObjToV1Obj = function transformTDV2ObjToV1Obj(td2) {
 			return transformTDV2StringToV1String(JSON.stringify(td2));
+		}
+		
+		
+		// ==========================================================
+		// Duesseldorf
+		// ==========================================================
+		
+		var transformTDV3StringToV1String = function transformTDV3StringToV1String(td3) {
+			var td1 = JSON.parse(td3);
+			if (td1['base'] != null) {
+				td1['uris'] = [];
+				td1['uris'].push(td1['base']);
+				delete td1['base'];
+			}
+			if (td1['interaction'] != null && Array.isArray(td1['interaction'])) {
+				for (var _i = 0, _a = td1['interaction']; _i < _a.length; _i++) {
+					var inter = _a[_i];
+					if (inter['@type'] != null && Array.isArray(inter['@type'])) {
+						if (inter['@type'].indexOf('Property') >= 0) {
+							if (td1['properties'] == null) {
+								td1['properties'] = [];
+							}
+							td1['properties'].push(inter);
+							if (inter['outputData'] != null) {
+								inter['valueType'] = inter['outputData'];
+								delete inter['outputData'];
+							}
+							fixLinksV3toHrefsEncodingsV1(td1, inter);
+						}
+						if (inter['@type'].indexOf('Action') >= 0) {
+							if (td1['actions'] == null) {
+								td1['actions'] = [];
+							}
+							td1['actions'].push(inter);
+							if (inter['outputData'] != null && inter['outputData']['type'] != null) {
+								inter['outputData']['valueType'] = {};
+								inter['outputData']['valueType']['type'] = inter['outputData']['type'];
+								delete inter['outputData']['type'];
+							}
+							if (inter['inputData'] != null && inter['inputData']['type'] != null) {
+								inter['inputData']['valueType'] = {};
+								inter['inputData']['valueType']['type'] = inter['inputData']['type'];
+								delete inter['inputData']['type'];
+							}
+							fixLinksV3toHrefsEncodingsV1(td1, inter);
+						}
+						if (inter['@type'].indexOf('Event') >= 0) {
+							if (td1['events'] == null) {
+								td1['events'] = [];
+							}
+							td1['events'].push(inter);
+							if (inter['outputData'] != null) {
+								inter['valueType'] = inter['outputData'];
+								delete inter['outputData'];
+							}
+							fixLinksV3toHrefsEncodingsV1(td1, inter);
+						}
+					}
+				}
+				delete td1['interaction'];
+			}
+			return td1;
+		}
+		
+		var fixLinksV3toHrefsEncodingsV1 = function fixLinksV3toHrefsEncodingsV1(td1, inter) {
+			if (inter['link'] != null && Array.isArray(inter['link'])) {
+				for (var _i = 0, _a = inter['link']; _i < _a.length; _i++) {
+					var link = _a[_i];
+					if (inter['hrefs'] == null) {
+						inter['hrefs'] = [];
+					}
+					inter['hrefs'].push(link['href']);
+					if (td1['encodings'] == null) {
+						td1['encodings'] = [];
+					}
+					if (td1['encodings'].indexOf(link['mediaType']) < 0) {
+						td1['encodings'].push(link['mediaType']);
+					}
+				}
+				delete inter['links'];
+			}
+		}
+		
+		var transformTDV3ObjToV1Obj = function transformTDV3ObjToV1Obj(td3) {
+			return transformTDV3StringToV1String(JSON.stringify(td3));
 		}
 		
 		// ==========================================================
